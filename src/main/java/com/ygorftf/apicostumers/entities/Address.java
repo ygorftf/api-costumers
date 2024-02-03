@@ -1,7 +1,13 @@
 package com.ygorftf.apicostumers.entities;
 
+import jakarta.persistence.*;
+
+@Entity
+@Table(name = "tb_addresses")
 public class Address {
 
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String street;
     private String number;
@@ -9,16 +15,21 @@ public class Address {
     private String city;
     private String addressLink;
 
-    public Address() {
-    }
+    @ManyToOne
+    @JoinColumn(name = "costumer_id")
+    private Costumer costumer;
 
-    public Address(Long id, String street, String number, String district, String city, String addressLink) {
+    public Address() {}
+
+    public Address(Long id, String street, String number, String district, String city,
+                   String addressLink, Costumer costumer) {
         this.id = id;
         this.street = street;
         this.number = number;
         this.district = district;
         this.city = city;
         this.addressLink = addressLink;
+        this.costumer = costumer;
     }
 
     public Long getId() {
@@ -67,5 +78,13 @@ public class Address {
 
     public void setAddressLink(String addressLink) {
         this.addressLink = addressLink;
+    }
+
+    public Costumer getCostumer() {
+        return costumer;
+    }
+
+    public void setCostumer(Costumer costumer) {
+        this.costumer = costumer;
     }
 }
