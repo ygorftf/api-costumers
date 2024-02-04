@@ -2,7 +2,9 @@ package com.ygorftf.apicostumers.entities;
 
 import jakarta.persistence.*;
 
+import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 
@@ -16,7 +18,7 @@ public class Costumer {
     private String name;
 
     @OneToMany(mappedBy = "costumer")
-    private Set<Address> addresses = new HashSet<>();
+    private List<Address> addresses = new ArrayList<>();
     @OneToMany(mappedBy = "costumer")
     private Set<Phone> phoneNumbers = new HashSet<>();
 
@@ -43,7 +45,7 @@ public class Costumer {
         this.name = name;
     }
 
-    public Set<Address> getAddresses() {
+    public List<Address> getAddresses() {
         return addresses;
     }
 
