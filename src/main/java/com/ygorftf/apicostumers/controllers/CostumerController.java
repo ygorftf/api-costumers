@@ -4,11 +4,10 @@ import com.ygorftf.apicostumers.dto.CostumerDTO;
 import com.ygorftf.apicostumers.services.CostumerService;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping(value = "/costumers")
@@ -20,5 +19,12 @@ public class CostumerController {
     public ResponseEntity<CostumerDTO> findCostumerById(@PathVariable Long id){
         CostumerDTO dto = service.findCostumerById(id);
         return ResponseEntity.ok(dto);
+    }
+
+    @GetMapping
+    public ResponseEntity<Page<CostumerDTO>> findAllCostumers(
+            @RequestParam(name = "name", defaultValue = "") String name, Pageable pageable){
+        Page<CostumerDTO> page = service.findAllCostumers(pageable, name);
+        return ResponseEntity.ok(page);
     }
 }

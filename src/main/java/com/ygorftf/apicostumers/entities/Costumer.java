@@ -20,7 +20,7 @@ public class Costumer {
     @OneToMany(mappedBy = "costumer")
     private List<Address> addresses = new ArrayList<>();
     @OneToMany(mappedBy = "costumer")
-    private Set<Phone> phoneNumbers = new HashSet<>();
+    private List<Phone> phoneNumbers = new ArrayList<>();
 
     public Costumer() {}
 
@@ -49,7 +49,7 @@ public class Costumer {
         return addresses;
     }
 
-    public Set<Phone> getPhoneNumbers() {
+    public List<Phone> getPhoneNumbers() {
         return phoneNumbers;
     }
 }
