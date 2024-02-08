@@ -4,16 +4,24 @@ import com.ygorftf.apicostumers.entities.Phone;
 
 public class PhoneDTO {
 
+    private Long id;
     private String phoneNumber;
 
-    public PhoneDTO(String phoneNumber) {
+    public PhoneDTO(Long id, String phoneNumber) {
+        this.id = id;
         this.phoneNumber = phoneNumber;
     }
 
     public PhoneDTO(Phone phone) {
+        id = phone.getId();
         phoneNumber = phone.getPhoneNumber();
     }
-    public String getPhoneNumbers() {
+
+    public Long getId() {
+        return id;
+    }
+
+    public String getPhoneNumber() {
         return phoneNumber ;
     }
 }

@@ -15,6 +15,9 @@ public class CostumerDTO {
 
     private List<PhoneDTO> phoneNumbers = new ArrayList<>();
 
+    public CostumerDTO() {
+    }
+
     public CostumerDTO(Long id, String name) {
         this.id = id;
         this.name = name;

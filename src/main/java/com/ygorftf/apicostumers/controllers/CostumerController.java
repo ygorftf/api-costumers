@@ -1,5 +1,6 @@
 package com.ygorftf.apicostumers.controllers;
 
+import com.ygorftf.apicostumers.dto.AddressDTO;
 import com.ygorftf.apicostumers.dto.CostumerDTO;
 import com.ygorftf.apicostumers.services.CostumerService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,5 +27,11 @@ public class CostumerController {
             @RequestParam(name = "name", defaultValue = "") String name, Pageable pageable){
         Page<CostumerDTO> page = service.findAllCostumers(pageable, name);
         return ResponseEntity.ok(page);
+    }
+
+    @PutMapping(value = "/{id}")
+    public ResponseEntity<CostumerDTO> updateCostumer(@PathVariable Long id, @RequestBody CostumerDTO dto){
+        dto = service.updateCostumerById(id, dto);
+        return ResponseEntity.ok(dto);
     }
 }
