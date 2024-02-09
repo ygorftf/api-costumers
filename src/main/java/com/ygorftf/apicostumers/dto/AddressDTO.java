@@ -11,6 +11,8 @@ public class AddressDTO {
     private String city;
     private String addressLink;
 
+    private Long costumerId;
+
     public AddressDTO() {
     }
 
@@ -30,6 +32,7 @@ public class AddressDTO {
         district = address.getDistrict();
         city = address.getCity();
         addressLink = address.getAddressLink();
+        costumerId = address.getCostumer().getId();
     }
 
 
@@ -55,5 +58,9 @@ public class AddressDTO {
 
     public String getAddressLink() {
         return addressLink;
+    }
+
+    public Long getCostumerId() {
+        return costumerId;
     }
 }

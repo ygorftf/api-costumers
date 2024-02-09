@@ -7,7 +7,7 @@ import com.ygorftf.apicostumers.entities.Phone;
 import java.util.*;
 import java.util.stream.Collectors;
 
-public class CostumerDTO {
+public class CostumerAddressPhoneDTO {
     private Long id;
     private String name;
 
@@ -15,30 +15,34 @@ public class CostumerDTO {
 
     private List<PhoneDTO> phoneNumbers = new ArrayList<>();
 
-    public CostumerDTO() {
+    public CostumerAddressPhoneDTO() {
     }
 
-    public CostumerDTO(Long id, String name) {
+    public CostumerAddressPhoneDTO(Long id, String name) {
         this.id = id;
         this.name = name;
     }
 
-    public CostumerDTO(Optional<Costumer> costumer) {
+    public CostumerAddressPhoneDTO(Optional<Costumer> costumer) {
         id = costumer.get().getId();
         name = costumer.get().getName();
-        addresses = costumer.get().getAddresses().stream().map(
-                x -> new AddressDTO(x)).collect(Collectors.toList());
-        phoneNumbers = costumer.get().getPhoneNumbers().stream().map(
-                x -> new PhoneDTO(x)).collect(Collectors.toList());
+        for (Address ad : costumer.get().getAddresses()){
+            addresses.add(new AddressDTO(ad));
+        }
+        for (Phone ph : costumer.get().getPhoneNumbers()){
+            phoneNumbers.add(new PhoneDTO(ph));
+        }
     }
 
-    public CostumerDTO(Costumer costumer) {
+    public CostumerAddressPhoneDTO(Costumer costumer) {
         id = costumer.getId();
         name = costumer.getName();
-        addresses = costumer.getAddresses().stream().map(
-                x -> new AddressDTO(x)).collect(Collectors.toList());
-        phoneNumbers = costumer.getPhoneNumbers().stream().map(
-                x -> new PhoneDTO(x)).collect(Collectors.toList());
+        for (Address ad : costumer.getAddresses()){
+            addresses.add(new AddressDTO(ad));
+        }
+        for (Phone ph : costumer.getPhoneNumbers()){
+            phoneNumbers.add(new PhoneDTO(ph));
+        }
     }
 
     public Long getId() {

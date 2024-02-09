@@ -1,7 +1,7 @@
 package com.ygorftf.apicostumers.services;
 
 import com.ygorftf.apicostumers.dto.AddressDTO;
-import com.ygorftf.apicostumers.dto.CostumerDTO;
+import com.ygorftf.apicostumers.dto.CostumerAddressPhoneDTO;
 import com.ygorftf.apicostumers.dto.PhoneDTO;
 import com.ygorftf.apicostumers.entities.Address;
 import com.ygorftf.apicostumers.entities.Costumer;
@@ -15,7 +15,6 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -31,56 +30,73 @@ public class CostumerService {
     private PhoneRepository phoneRepository;
 
     @Transactional(readOnly = true)
-    public CostumerDTO findCostumerById(Long id) {
+    public CostumerAddressPhoneDTO findCostumerById(Long id) {
         Optional<Costumer> costumer = repository.findById(id);
-        return new CostumerDTO(costumer);
+        return new CostumerAddressPhoneDTO(costumer);
     }
 
     @Transactional(readOnly = true)
-    public Page<CostumerDTO> findAllCostumers(Pageable pageable, String name) {
+    public Page<CostumerAddressPhoneDTO> findAllCostumers(Pageable pageable, String name) {
         Page<Costumer> page = repository.findAllCostumers(pageable, name);
-        return page.map(x -> new CostumerDTO(x));
+        return page.map(x -> new CostumerAddressPhoneDTO(x));
     }
 
     @Transactional
-    public CostumerDTO updateCostumerById(Long id, CostumerDTO dto) {
+    public CostumerAddressPhoneDTO insertCostumer(CostumerAddressPhoneDTO dto) {
+        Costumer costumer = new Costumer();
+        costumer.setName(dto.getName());
+
+        for (AddressDTO aDto : dto.getAddresses()) {
+            Address address = new Address();
+            address.setStreet(aDto.getStreet());
+            address.setNumber(aDto.getNumber());
+            address.setDistrict(aDto.getDistrict());
+            address.setCity(aDto.getCity());
+            address.setAddressLink(aDto.getAddressLink());
+            address.setCostumer(costumer);
+            costumer.getAddresses().add(address);
+            addressRepository.save(address);
+        }
+
+        for (PhoneDTO pDto : dto.getPhoneNumbers()) {
+            Phone phone = new Phone();
+            phone.setPhoneNumber(pDto.getPhoneNumber());
+            phone.setCostumer(costumer);
+            costumer.getPhoneNumbers().add(phone);
+            phoneRepository.save(phone);
+        }
+
+        repository.save(costumer);
+        return new CostumerAddressPhoneDTO(costumer);
+    }
+
+    @Transactional
+    public CostumerAddressPhoneDTO updateCostumer(Long id, CostumerAddressPhoneDTO dto) {
         Costumer costumer = repository.getReferenceById(id);
         costumer.setName(dto.getName());
 
         for (AddressDTO aDto : dto.getAddresses()) {
-            Address a = addressRepository.getReferenceById(aDto.getId());
-            a.setStreet(aDto.getStreet());
-            a.setNumber(aDto.getNumber());
-            a.setDistrict(aDto.getDistrict());
-            a.setCity(aDto.getCity());
-            a.setAddressLink(aDto.getAddressLink());
-            addressRepository.save(a);
-            costumer.getAddresses().add(a);
+            Address address = addressRepository.getReferenceById(aDto.getId());
+            copyAddressToDto(address, aDto);
+            addressRepository.save(address);
+            costumer.getAddresses().add(address);
         }
 
-        for (PhoneDTO pDto : dto.getPhoneNumbers()){
-            Phone p = phoneRepository.getReferenceById(pDto.getId());
-            p.setPhoneNumber(pDto.getPhoneNumber());
-            phoneRepository.save(p);
-            costumer.getPhoneNumbers().add(p);
+        for (PhoneDTO pDto : dto.getPhoneNumbers()) {
+            Phone phone = phoneRepository.getReferenceById(pDto.getId());
+            phone.setPhoneNumber(pDto.getPhoneNumber());
+            phoneRepository.save(phone);
+            costumer.getPhoneNumbers().add(phone);
         }
 
         costumer = repository.save(costumer);
-        return new CostumerDTO(costumer);
+        return new CostumerAddressPhoneDTO(costumer);
     }
-
-   /* public AddressDTO updateCostumerById(Long id, AddressDTO dto) {
-        Address address = addressRepository.getReferenceById(id);
-
+        public void copyAddressToDto(Address address, AddressDTO dto) {
         address.setStreet(dto.getStreet());
         address.setNumber(dto.getNumber());
         address.setDistrict(dto.getDistrict());
         address.setCity(dto.getCity());
         address.setAddressLink(dto.getAddressLink());
-
-        address = addressRepository.save(address);
-        return new AddressDTO(address);
     }
-
-    */
 }
